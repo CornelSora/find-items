@@ -44,7 +44,7 @@ export default {
                 return
             }
             this.citiesArray = this.citiesArray.filter((city) => {
-                return city.nume.startsWith(val)
+                return city.nume.toLowerCase().startsWith(val.toLowerCase())
             })
         }
     },

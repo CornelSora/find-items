@@ -1,13 +1,13 @@
 <template>
   <div>
-    <addLostItem :displayModal="display" />
+    <addLostItem :displayModal="display" :city="city" />
     <div class="hello">
       <b-btn @click="logout" id="logout">Logout</b-btn>
       <b-btn @click="changeCity" id="logout">Change city</b-btn>
       <b-tabs>
         <b-tab title="I lost">
-          <b-btn class="btnLost" variant="primary" @click="displayAddFrom">I lost an item</b-btn>
-          <br>We have no records
+          <b-btn class="btnLost" variant="primary" @click="displayAddFrom">I lost an item</b-btn> <br/>
+          <lostThings />
         </b-tab>
         <b-tab title="I found">
           <br>We have no records
@@ -19,19 +19,20 @@
 
 <script>
 import addLostItem from './AddLostItem'
+import lostThings from './LostThings'
 
 export default {
   name: 'IndexPage',
   data () {
     return {
-      city: this.$route.query,
+      city: this.$route.params.auto,
       display: false
     }
   },
+  mounted () {
+        console.warn(this.city)
+      },
   methods: {
-    mounted () {
-      console.warn(city)
-    },
     async logout () {
       try {
         await this.$firebase.auth().signOut()
@@ -48,7 +49,8 @@ export default {
     }
   },
   components: {
-    addLostItem
+    addLostItem,
+    lostThings
   }
 }
 </script>

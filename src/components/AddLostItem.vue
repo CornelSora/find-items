@@ -1,38 +1,49 @@
 <template>
     <b-modal id="modalPrevent"
                 ref="modal"
-                title="Submit your name"
+                title="Add details about item"
                 @ok="handleOk"
                 @shown="clearName">
-        <b-form @submit.stop.prevent="handleSubmit">
+        <b-form>
             <b-form-file
-                v-model="file"
+                v-model="lostItem.image"
                 placeholder="Upload a picture"
                 name="pic" accept="image/*"
                 ></b-form-file><br/>
             <br/>
             <b-form-input type="text"
                             placeholder="Enter product name"
-                            v-model="name"></b-form-input> <br />
-            <b-form-input type="text"
-                            placeholder="Enter other details"
-                            v-model="name"></b-form-input> <br />
+                            :state="!$v.lostItem.title.$invalid"
+                            v-model="lostItem.title"></b-form-input> <br />
             <b-form-input type="text"
                             placeholder="Contact (phone / email)"
-                            v-model="name"></b-form-input>
+                            v-model="lostItem.contact"></b-form-input> <br />
+            <b-form-textarea id="textarea1"
+                     v-model="lostItem.description"
+                     :state="!$v.lostItem.title.$invalid"
+                     placeholder="Enter more details"
+                     :rows="3"
+                     :max-rows="6">
+            </b-form-textarea>
         </b-form>
     </b-modal>
 </template>
 
 <script>
-import LZW from '../utils/compress'
+import { validationMixin } from "vuelidate"
+import { required, minLength } from "vuelidate/lib/validators"
 
 export default {
   data () {
     return {
-      name: '',
-      names: [],
-      file: ''
+      lostItem: {
+          image: "",
+          title: "",
+          description: "",
+          contact: "",
+          city: this.city,
+          messages: []
+      }
     }
   },
   methods: {
@@ -43,24 +54,22 @@ export default {
       // Prevent modal from closing
       evt.preventDefault()
       var ValidImageTypes = ["image/gif", "image/jpeg", "image/png"];
-      if (ValidImageTypes.indexOf(this.file.type) === -1) {
-            alert('Please add only image types (gif, jpeg, png)')
+      if (this.$v.lostItem.$invalid) {
+            return
       } else {
-          let base = await this.getBase64(this.file)
-          console.warn(base)
-          let reduce = await this.reduceImage(base)
-          console.warn(reduce)
+          if (this.lostItem.image) {
+            let base = await this.getBase64(this.lostItem.image)
+            let reduce = await this.reduceImage(base)
+            this.lostItem.image = reduce
+          } else {
+              this.lostItem.image = ''
+          }
+          let ref = this.$firebase.database().ref()
+          let itemsRef = ref.child('LostItems')
+          itemsRef.push(this.lostItem)
+          this.lostItem = {}
+          this.$refs.modal.hide()
       }
-      if (!this.name) {
-        alert('Please enter your name')
-      } else {
-        this.handleSubmit()
-      }
-    },
-    handleSubmit () {
-      this.names.push(this.name)
-      this.clearName()
-      this.$refs.modal.hide()
     },
     getBase64 (fileParam) {
         return new Promise ((resolve, reject) => {
@@ -96,6 +105,20 @@ export default {
         }) 
     }
   },
+  mixins: [
+    validationMixin
+  ],
+  validations: {
+    lostItem: {
+        title: {
+            required
+        },
+        description: {
+            required,
+            minLength: minLength(3)   
+        }
+    }
+  },
   watch: {
       displayModal (val) {
         this.$refs.modal.show()
@@ -106,6 +129,10 @@ export default {
           type: Boolean,
           required: false,
           default: false
+      },
+      city: {
+          type: String,
+          required: true
       }
   }
 }
