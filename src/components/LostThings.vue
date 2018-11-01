@@ -34,7 +34,6 @@ export default {
         }, function (errorObject) {
             console.log("The read failed: " + errorObject.code);
         });
-        var x = []
         ref.on("child_added", (snapshot, prevChildKey) => {
             var newPost = snapshot.val();
             this.things.push(newPost)

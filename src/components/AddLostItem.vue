@@ -66,6 +66,7 @@ export default {
           }
           let ref = this.$firebase.database().ref()
           let itemsRef = ref.child('LostItems')
+          this.lostItem.createdAt = (new Date()).toString()
           itemsRef.push(this.lostItem)
           this.lostItem = {}
           this.$refs.modal.hide()
@@ -88,10 +89,10 @@ export default {
             try {
                 var canvas = document.createElement('canvas');
                 var context = canvas.getContext('2d');
-                var x = 188;
-                var y = 30;
-                var width = 200;
-                var height = 137;
+                var x = 0;
+                var y = 0;
+                var width = 300;
+                var height = 150;
                 var imageObj = new Image();
 
                 imageObj.onload = function() {
