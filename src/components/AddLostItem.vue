@@ -6,7 +6,7 @@
                 @shown="clearName">
         <b-form>
             <b-form-file
-                v-model="lostItem.image"
+                v-model="imageUploaded"
                 placeholder="Upload a picture"
                 name="pic" accept="image/*"
                 ></b-form-file><br/>
@@ -36,6 +36,7 @@ import { required, minLength } from "vuelidate/lib/validators"
 export default {
   data () {
     return {
+      imageUploaded: '',
       lostItem: {
           image: "",
           title: "",
@@ -57,8 +58,8 @@ export default {
       if (this.$v.lostItem.$invalid) {
             return
       } else {
-          if (this.lostItem.image) {
-            let base = await this.getBase64(this.lostItem.image)
+          if (this.imageUploaded) {
+            let base = await this.getBase64(this.imageUploaded)
             let reduce = await this.reduceImage(base)
             this.lostItem.image = reduce
           } else {
@@ -92,7 +93,7 @@ export default {
                 var x = 0;
                 var y = 0;
                 var width = 300;
-                var height = 150;
+                var height = 300;
                 var imageObj = new Image();
 
                 imageObj.onload = function() {

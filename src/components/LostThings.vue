@@ -1,20 +1,26 @@
 <template>
-    <div class="lost-list">
+    <div class="container-fluid lost-list">
         <b-list-group>
-            <b-list-group-item v-for="thing in things" :key="thing.id">
-                <div class="row test">
-                    <div class="col">
-                        <b-img v-if="thing.image" width="75" height="75" :src="thing.image" />
-                        <b-img v-if="!thing.image" blank rounded width="75" height="75" blank-color="#777" alt="img" class="m-1" :src="thing.image" />
+            <b-list-group-item v-for="thing in things.slice((currentPage - 1) * perPage, currentPage * perPage)" :key="thing.id">
+                <div class="media">
+                    <div class="media-left">
+                        <b-img v-if="thing.image" width="75" height="75" :src="thing.image" @click="showImage(thing.image, thing.title)" />
+                        <b-img v-if="!thing.image" blank rounded width="75" height="75" blank-color="#777" alt="img" class="m-1" />
                     </div>
-                    <div class="col">
-                        <h5 class="mt-0 row">{{ thing.title }}</h5> <br/>
-                        <p class="row">{{ thing.description }}</p>
+                    <div class="media-body" @click="goToObject">
+                        <h5><b>{{ thing.title }}</b></h5>
+                        <p>{{ thing.description }}</p>
                     </div>
                 </div>
             </b-list-group-item>
+            <b-pagination align="center" size="md" :total-rows="things.length" v-model="currentPage" :per-page="perPage" style="margin-top: 5px;">
+            </b-pagination>
         </b-list-group>
-        <div v-if="things.length === 0"><br>We have no records</div>
+        <b-modal ref="imageModal" id="imageModal" :title="selectedImageTitle">
+            <b-img :src="selectedImageSource" />
+        </b-modal>
+        <div v-if="things.length === 0 && !loading"><br>We have no records</div>
+        <b-progress :value="100" variant="danger" striped="striped" class="mb-2" v-if="loading"></b-progress>
     </div>
 </template>
 
@@ -22,22 +28,44 @@
 export default {
     data () {
         return {
-            things: []
+            perPage: 4,
+            currentPage: 1,
+            things: [],
+            selectedImageSource: '',
+            selectedImageTitle: '',
+            loading: true
         }
     },
     mounted () {
         let ref = this.$firebase.database().ref('/LostItems')
-        ref.on("value", function(snapshot) {
-            snapshot.forEach(function(childSnapshot) {
-                var childData = childSnapshot.val();
-            });
+
+        ref.on("value", (snapshot) => {
+            this.loading = false
         }, function (errorObject) {
             console.log("The read failed: " + errorObject.code);
         });
         ref.on("child_added", (snapshot, prevChildKey) => {
+            this.loading = false
             var newPost = snapshot.val();
-            this.things.push(newPost)
+            this.wantsToAdd ? this.things.unshift(newPost) : this.things.push(newPost)
         });
+    },
+    methods: {
+        showImage (src, title) {
+            this.$refs.imageModal.show()
+            this.selectedImageSource = src
+            this.selectedImageTitle = title
+        },
+        goToObject () {
+            console.warn('going to object')
+        }
+    },
+    props: {
+        wantsToAdd: {
+            type: Boolean,
+            required: false,
+            default: false
+        }
     }
 }
 </script>
@@ -48,7 +76,7 @@ export default {
     align-content: left;
     margin-top: 50px;
 }
-.col {
-    flex-grow: 0.15;
+.media-left {
+    margin-right: 5px;
 }
 </style>

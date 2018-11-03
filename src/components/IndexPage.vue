@@ -7,7 +7,7 @@
       <b-tabs>
         <b-tab title="I lost">
           <b-btn class="btnLost" variant="primary" @click="displayAddFrom">I lost an item</b-btn> <br/>
-          <lostThings />
+          <lostThings :wantsToAdd="isAddClicked" />
         </b-tab>
         <b-tab title="I found">
           <br>We have no records
@@ -26,7 +26,8 @@ export default {
   data () {
     return {
       city: this.$route.params.auto,
-      display: false
+      display: false,
+      isAddClicked: false
     }
   },
   mounted () {
@@ -43,6 +44,7 @@ export default {
     },
     displayAddFrom () {
       this.display = !this.display
+      this.isAddClicked = true
     },
     changeCity () {
       this.$router.replace('/cities')
