@@ -32,6 +32,12 @@ const router = new Router({
       name: 'Cities',
       component: () => import("@/components/Cities"),
       meta: { requiresAuth: true }
+    },
+    {
+      path: '/details',
+      name: 'details',
+      component: () => import("@/components/ThingDetails"),
+      meta: { requiresAuth: true }
     }
   ]
 })

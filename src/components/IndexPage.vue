@@ -1,16 +1,17 @@
 <template>
   <div>
-    <addLostItem :displayModal="display" :city="city" />
+    <addLostItem :displayModal="display" :source="sourceToAdd" :city="city" />
     <div class="hello">
       <b-btn @click="logout" id="logout">Logout</b-btn>
       <b-btn @click="changeCity" id="logout">Change city</b-btn>
       <b-tabs>
-        <b-tab title="I lost">
-          <b-btn class="btnLost" variant="primary" @click="displayAddFrom">I lost an item</b-btn> <br/>
-          <lostThings :wantsToAdd="isAddClicked" />
+        <b-tab title="Lost things">
+          <b-btn class="btnLost" variant="primary" @click="displayAddFrom('LostItems')">I lost an item</b-btn> <br/>
+          <lostThings :wantsToAdd="isAddClicked" source="/LostItems" :city="city"/>
         </b-tab>
-        <b-tab title="I found">
-          <br>We have no records
+        <b-tab title="Found things">
+          <b-btn class="btnLost" variant="primary" @click="displayAddFrom('FoundItems')">I found an item</b-btn> <br/>
+          <lostThings :wantsToAdd="isAddClicked" source="/FoundItems" :city="city"/>
         </b-tab>
       </b-tabs>
     </div>
@@ -27,12 +28,10 @@ export default {
     return {
       city: this.$route.params.auto,
       display: false,
-      isAddClicked: false
+      isAddClicked: false,
+      sourceToAdd: 'LostThings'
     }
   },
-  mounted () {
-        console.warn(this.city)
-      },
   methods: {
     async logout () {
       try {
@@ -42,7 +41,8 @@ export default {
         console.warn(e)
       }
     },
-    displayAddFrom () {
+    displayAddFrom (source) {
+      this.sourceToAdd = source
       this.display = !this.display
       this.isAddClicked = true
     },

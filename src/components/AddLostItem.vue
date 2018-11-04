@@ -47,6 +47,10 @@ export default {
       }
     }
   },
+  mounted () {
+    const currentUser = this.$firebase.auth().currentUser
+    this.lostItem.contact = currentUser.email
+  },
   methods: {
     clearName () {
       this.name = ''
@@ -66,7 +70,7 @@ export default {
               this.lostItem.image = ''
           }
           let ref = this.$firebase.database().ref()
-          let itemsRef = ref.child('LostItems')
+          let itemsRef = ref.child(this.source)
           this.lostItem.createdAt = (new Date()).toString()
           itemsRef.push(this.lostItem)
           this.lostItem = {}
@@ -133,6 +137,10 @@ export default {
           default: false
       },
       city: {
+          type: String,
+          required: true
+      },
+      source: {
           type: String,
           required: true
       }
