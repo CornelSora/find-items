@@ -3,7 +3,7 @@ import router from '@/router'
 
 import Login from '@/components/Login'
 
-describe.only('Login.vue', () => {
+describe('Login.vue', () => {
   it('it should contain data', () => {
     expect(typeof Login.data).to.equal('function')
   })
@@ -23,11 +23,4 @@ describe.only('Login.vue', () => {
     const msg = btnLogin.innerHTML
     expect(msg).to.equal('Connection')
   })
-
-  // it('user info after calling login', async () => {
-  //   const Constructor = Vue.extend(Login)
-  //   const vm = new Constructor({router}).$mount()
-  //   const userInfo = await vm.login('test2@gmail.com', 'test1234')
-  //   expect(userInfo != undefined).to.equal(true)
-  // })
 })
