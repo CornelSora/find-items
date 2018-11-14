@@ -71,11 +71,14 @@ export default {
           }
           let ref = this.$firebase.database().ref()
           let itemsRef = ref.child(this.source)
-          this.lostItem.createdAt = (new Date()).toString()
+          this.lostItem.createdAt =  this.formatDate(new Date())
           itemsRef.push(this.lostItem)
           this.lostItem = {}
           this.$refs.modal.hide()
       }
+    },
+    formatDate (date) {
+        return moment((new Date(date)).toString()).format("DD-MM-YYYY")
     },
     getBase64 (fileParam) {
         return new Promise ((resolve, reject) => {

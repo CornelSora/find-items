@@ -25,7 +25,7 @@
                     </div>
                     <div class="media-body clickable" @click="goToObject(thing)">
                         <h5><b>{{ thing.title }}</b></h5>
-                        <p>Added at: {{ formatDate(thing.createdAt) }}</p>
+                        <p>Added at: {{ thing.createdAt }}</p>
                     </div>
                 </div>
             </b-list-group-item>
@@ -51,7 +51,7 @@
         <b-modal ref="imageModal" id="imageModal" :title="selectedImageTitle">
             <b-img :src="selectedImageSource" />
         </b-modal>
-        <b-modal ref="thingDetals">
+        <b-modal ref="thingDetals" :title="selectedThing.title">
             <thingDetails :lostThing="selectedThing" />
         </b-modal>
     </div>
@@ -96,9 +96,6 @@ export default {
         goToObject (thing) {
             this.selectedThing = thing
             this.$refs.thingDetals.show()
-        },
-        formatDate (date) {
-            return moment((new Date(date)).toString()).format("DD-MM-YYYY")
         }
     },
     props: {

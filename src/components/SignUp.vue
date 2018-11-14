@@ -13,7 +13,7 @@
         placeholder="Password"
         v-model="password"
       /><br/>
-      <b-btn variant="outline-success" @click="signUp">Sign Up</b-btn>
+      <b-btn variant="outline-success" @click="signUp" id="btnRegister">Sign Up</b-btn>
       <span>Or go back to <router-link to="/">login</router-link>.</span>
     </b-container>
   </div>

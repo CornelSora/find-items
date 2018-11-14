@@ -15,7 +15,8 @@
       /><br/>
       <b-btn
         variant="outline-success"
-        @click="login">Connection</b-btn>
+        id="btnLogin"
+        @click="login(email, password)">Connection</b-btn>
       <p>You don't have an account ? You can <router-link to="/sign-up">create one</router-link></p>
     </b-container>
   </div>
@@ -29,14 +30,15 @@ export default {
   data () {
     return {
       email: '',
-      password: ''
+      password: '',
     }
   },
   methods: {
-    async login () {
+    async login (email, password) {
       try {
-        let user = await this.$firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+        const user = await this.$firebase.auth().signInWithEmailAndPassword(email, password)
         this.$router.replace('cities')
+        return user
       } catch (e) {
         console.warn(e)
       }

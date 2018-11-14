@@ -3,7 +3,7 @@
     <addLostItem :displayModal="display" :source="sourceToAdd" :city="city" />
     <div class="hello">
       <b-btn @click="logout" id="logout">Logout</b-btn>
-      <b-btn @click="changeCity" id="logout">Change city</b-btn>
+      <!-- <b-btn @click="changeCity" id="logout">Change city</b-btn> -->
       <b-tabs>
         <b-tab title="Lost things">
           <b-btn class="btnLost" variant="primary" @click="displayAddFrom('LostItems')">I lost an item</b-btn> <br/>

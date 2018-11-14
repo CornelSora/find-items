@@ -9,7 +9,6 @@
             blank-color="#777"
         />
         </center>
-        <h2><b>{{ lostThing.title }}</b></h2>
         <p><b>Contact:</b> {{ lostThing.contact ? lostThing.contact : "Unkown" }} </p>
         <p><b>Description:</b> {{ lostThing.description }}</p>
     </b-container>
